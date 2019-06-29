@@ -8,16 +8,17 @@ public class EnemyHealth : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D collider) {
         if (collider.tag == "GalagaBullet" || collider.tag == "Galaga") {
-            PlayExplosion ();
-            GameObject scoreobj = GameObject.FindGameObjectWithTag ("Score");
-            Score score = (Score)scoreobj.GetComponent (typeof(Score));
-            score.OnHitEnemy ();
-            Destroy (gameObject);
+            PlayExplosion();
+            GameObject scoreobj = GameObject.FindGameObjectWithTag("Score");
+            Score score = (Score)scoreobj.GetComponent(typeof(Score));
+            score.OnHitEnemy();
+            Destroy(gameObject);
         }
     }
 
-    void PlayExplosion(){
-        var explosion = (GameObject)Instantiate (explosionPref);
+    void PlayExplosion() {
+        var explosion = (GameObject)Instantiate(explosionPref);
         explosion.transform.position = gameObject.transform.position;
     }
+
 }

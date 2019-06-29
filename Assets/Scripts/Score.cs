@@ -9,8 +9,9 @@ public class Score : MonoBehaviour {
         score += 10;
     }
 
-    void Update () {
-        TextMesh mesh = GetComponent<TextMesh> ();
+    void Update() {
+        TextMesh mesh = GetComponent<TextMesh>();
         mesh.text = "" + score;
     }
+
 }

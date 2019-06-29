@@ -7,13 +7,14 @@ public class GalagaLife : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D collider) {
         if (collider.tag == "EnemyBullet" || collider.tag == "Enemy") {
-            PlayExplosion ();
-            Destroy (gameObject);
+            PlayExplosion();
+            Destroy(gameObject);
         }
     }
 
-    void PlayExplosion(){
-        var explosion = (GameObject)Instantiate (explosionPref);
+    void PlayExplosion() {
+        var explosion = (GameObject) Instantiate(explosionPref);
         explosion.transform.position = gameObject.transform.position;
     }
+
 }

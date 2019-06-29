@@ -21,10 +21,9 @@ public class EnemyArmySpawner : MonoBehaviour {
         return total;
     }
 
-    void Start () {
+    void Start() {
         enemies = new GameObject[enemyRows * enemyColumns];
-
-        Spawn ();
+        Spawn();
     }
 
     bool NeedSpawn() {
@@ -36,9 +35,9 @@ public class EnemyArmySpawner : MonoBehaviour {
         for (int i = 0; i < enemyRows; i++) {
             for (int j = 0; j < enemyColumns; j++) {
                 if (!enemies [i * enemyColumns + j]) {
-                    Vector2 pos = new Vector2 (j - enemyColumns / 2 + 0.5f, i + 2);
-                    enemies [i * enemyColumns + j] = (GameObject)Instantiate (enemyPref, pos, Quaternion.identity);
-                    enemies [i * enemyColumns + j].transform.SetParent (this.transform);
+                    Vector2 pos = new Vector2(j - enemyColumns / 2 + 0.5f, i + 2);
+                    enemies [i * enemyColumns + j] = (GameObject) Instantiate(enemyPref, pos, Quaternion.identity);
+                    enemies [i * enemyColumns + j].transform.SetParent(this.transform);
                 }
             }
         }
@@ -47,7 +46,7 @@ public class EnemyArmySpawner : MonoBehaviour {
     void Move() {
         var pos = transform.position;
         pos.x = pos.x + direction * Time.deltaTime * speed;
-        pos.x = Mathf.Clamp (pos.x, -1, 1);
+        pos.x = Mathf.Clamp(pos.x, -1, 1);
 
         transform.position = pos;
 
@@ -56,19 +55,19 @@ public class EnemyArmySpawner : MonoBehaviour {
         }
     }
 
-    bool isAttacking(){
-        return (bool)attackForce;
+    bool isAttacking() {
+        return (bool) attackForce;
     }
 
-    IEnumerator ChooseAttackForce(){
-        yield return new WaitForSeconds (1);
+    IEnumerator ChooseAttackForce() {
+        yield return new WaitForSeconds(1);
 
         if (!attackForce && GameObject.FindGameObjectWithTag("Galaga")) {
-            var enemyCount = GetEnemyCount ();
+            var enemyCount = GetEnemyCount();
             if (enemyCount == 0) {
-                yield return new WaitForSeconds (1);
+                yield return new WaitForSeconds(1);
             }
-            int attackerIndex = Random.Range (0, enemyCount);
+            int attackerIndex = Random.Range(0, enemyCount);
             foreach (GameObject enemy in enemies) {
                 if (enemy) {
                     enemyCount -= 1;
@@ -82,22 +81,22 @@ public class EnemyArmySpawner : MonoBehaviour {
 
     void Attack() {
         attackForce.transform.parent = null;
-
-        Enemy enemy = (Enemy)attackForce.GetComponent (typeof(Enemy));
-        enemy.Move ();
+        Enemy enemy = (Enemy) attackForce.GetComponent(typeof(Enemy));
+        enemy.Move();
     }
 
-    void Update () {
-        if (NeedSpawn ()) {
-            Spawn ();
+    void Update() {
+        if (NeedSpawn()) {
+            Spawn();
         } else {
-            Move ();
+            Move();
         }
 
-        if (isAttacking ()) {
-            Attack ();
+        if (isAttacking()) {
+            Attack();
         } else {
-            StartCoroutine (ChooseAttackForce());
+            StartCoroutine(ChooseAttackForce());
         }
     }
+
 }

@@ -3,19 +3,24 @@ using System.Collections;
 
 public class GalagaBulletEmitter : BulletEmitter {
 
-    public new bool CanFire(){
-        // Player hit fire signal, and emitter is cooling down
-        // return Input.GetKeyDown ("space") && !cooling;
+    GameObject speed;
+
+    void Start() {
+        speed = GameObject.FindGameObjectWithTag("Sensor");
+    }
+
+    void Update() {
+        coolingSeconds = 0.5f - (float) speed.GetComponent<Sensor>().m_speed / 1000;
+        if (NeedReload()) {
+            Reload();
+        }
+        if (CanFire()) {
+            StartCoroutine(Fire());
+        }
+    }
+
+    public new bool CanFire() {
         return !cooling;
     }
 
-    void Update () {
-        if (NeedReload()) {
-            Reload ();
-        }
-
-        if (CanFire()) {
-            StartCoroutine (Fire ());
-        }
-    }
 }
