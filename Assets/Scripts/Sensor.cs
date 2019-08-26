@@ -85,8 +85,8 @@ public class Sensor : MonoBehaviour
         if (m_s == 10) {
             // Debug.Log("S=" + m_d);
             if (m_d == m_d_last) {
-                if (m_d > 17) { m_direction = -1; }
-                else if (m_d < 15) { m_direction = 1; }
+                if (m_d > 20) { m_direction = -1; }
+                else if (m_d < 18) { m_direction = 1; }
                 else { m_direction = 0; }
                 return;
             }
