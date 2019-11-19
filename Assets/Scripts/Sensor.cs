@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.IO.Ports;
+using System.IO.Pipes;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,14 +14,25 @@ public class Sensor : MonoBehaviour
     public bool m_run = true;
     public SerialPort m_stream;
 
+    //---- pipe ----
+    public const string PIPE_FOO = "foo";
+    public NamedPipeClientStream m_pipe;
+    public StreamReader m_reader;
+    public bool m_x = true;
+    //----
+
     long m_lastReadTime = 0;
     long m_duration = 0;
 
     void Start()
     {
-        String[] args = Environment.GetCommandLineArgs();
-        m_stream = new SerialPort(args[1], 115200, Parity.None, 8, StopBits.One);
-        // m_stream = new SerialPort("COM3", 115200, Parity.None, 8, StopBits.One);
+        //---- pipe ----
+        m_run = true;
+        new Thread(ReadThread).Start();
+        //----
+        /*
+        //String[] args = Environment.GetCommandLineArgs();
+        //m_stream = new SerialPort(args[1], 115200, Parity.None, 8, StopBits.One);
         m_run = true;
         try {
             m_stream.Open();
@@ -28,6 +41,7 @@ public class Sensor : MonoBehaviour
             return;
         }
         new Thread(ReadThread).Start();
+        */
     }
 
     void Update()
@@ -36,8 +50,12 @@ public class Sensor : MonoBehaviour
     }
 
     private void OnApplicationQuit() {
+        //---- pipe ----
         m_run = false;
+        //----
+        /*
         m_stream.Close();
+        */
     }
 
     long GetTickTime() {
@@ -45,6 +63,23 @@ public class Sensor : MonoBehaviour
     }
 
     void ReadThread() {
+        //---- pipe ----
+        using (m_pipe = new NamedPipeClientStream(".", PIPE_FOO, PipeDirection.In))
+        {
+            m_pipe.Connect();
+            using (m_reader = new StreamReader(m_pipe))
+            {
+                while (m_run) {
+                    int b = m_reader.Read();
+                    if (b != -1) {
+                        //print("----" + b + "----");
+                        ReadStateMachine(b);
+                    }
+                }
+            }
+        }
+        //----
+        /*
         while (m_run) {
             try {
                 int b = m_stream.ReadByte();
@@ -54,6 +89,7 @@ public class Sensor : MonoBehaviour
                 //
             }
         }
+        */
     }
 
     int m_s;
@@ -78,12 +114,10 @@ public class Sensor : MonoBehaviour
             }
         }
         if (m_s ==  6) {
-            // Debug.Log("" + m_v);
             m_speed = m_v;
             return;
         }
         if (m_s == 10) {
-            // Debug.Log("S=" + m_d);
             if (m_d == m_d_last) {
                 if (m_d > 20) { m_direction = -1; }
                 else if (m_d < 18) { m_direction = 1; }
