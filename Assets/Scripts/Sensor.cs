@@ -49,7 +49,7 @@ public class Sensor : MonoBehaviour
         //
     }
 
-    private void OnApplicationQuit() {
+    void OnApplicationQuit() {
         //---- pipe ----
         m_run = false;
         //----
@@ -119,8 +119,8 @@ public class Sensor : MonoBehaviour
         }
         if (m_s == 10) {
             if (m_d == m_d_last) {
-                if (m_d > 20) { m_direction = -1; }
-                else if (m_d < 18) { m_direction = 1; }
+                if (m_d < 14) { m_direction = -1; }
+                else if (m_d > 16) { m_direction = 1; }
                 else { m_direction = 0; }
                 return;
             }
